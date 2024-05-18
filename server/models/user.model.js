@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const TransactionSchema = new mongoose.Schema({
+const UserTransactionSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Name of transaction is required"]
@@ -9,6 +9,10 @@ const TransactionSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: [true, "Date of transaction is required"]
+    },
+    userOwes: {
+        type: Boolean,
+        required: [true, "User owes is required"]
     },
     amount: {
         type: Number,
@@ -42,9 +46,9 @@ const UserSchema = mongoose.Schema({
         required: [true, "Password of user is required"]
     },
 
-    currentTransactions: [TransactionSchema],
+    currentTransactions: [UserTransactionSchema],
 
-    pastTransactions: [TransactionSchema]
+    pastTransactions: [UserTransactionSchema]
 },
     {
         timestamps: true
@@ -52,5 +56,6 @@ const UserSchema = mongoose.Schema({
 );
 
 const User = mongoose.model("User", UserSchema);
+const UserTransaction = mongoose.model("UserTransaction", UserTransactionSchema);
 
-module.exports = User;
+module.exports = { User, UserTransaction };
