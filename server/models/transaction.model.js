@@ -21,17 +21,18 @@ const TransactionSchema = mongoose.Schema({
         required: false
     },
 
-    // peopleOwed: [{
-    //     name: {
-    //         type: String,
-    //         required: [true, "Name of person owed is required"]
-    //     },
+    peopleOwed: [{
+        name: {
+            type: String,
+            required: false,
+            unique: true
+        },
 
-    //     amount: {
-    //         type: Number,
-    //         required: false
-    //     }
-    // }]
+        amount: {
+            type: Number,
+            required: false
+        }
+    }]
 },
     {
         timestamps: true

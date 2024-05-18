@@ -1,14 +1,15 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const Transaction = require('./models/transaction.model');
 const transactionRoutes = require('./routes/transaction.route');
+const userRoutes = require('./routes/user.route');
 
 // middleware
 app.use(express.json());
 
 // routes
 app.use('/api/transaction', transactionRoutes);
+app.use('/api/user', userRoutes);
 
 // default route
 app.get('/', (req, res) => {
