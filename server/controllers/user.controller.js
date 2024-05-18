@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
+const bcrypt = require('bcrypt');
 
+// creates user with an unhashed password
 const createUser = async (req, res) => {
     if (req.body) {
         const user = new User(req.body);
@@ -13,6 +15,7 @@ const createUser = async (req, res) => {
     }
 }
 
+// gets user by ID
 const getUser = async (req, res) => {
     if (req.params && req.params.id) {
         await User.findById(req.params.id)
@@ -25,6 +28,7 @@ const getUser = async (req, res) => {
     }
 }
 
+// gets all users
 const getUsers = async (req, res) => {
     await User.find({})
         .then(data => {
@@ -35,6 +39,7 @@ const getUsers = async (req, res) => {
         });
 }
 
+// deletes user by ID
 const deleteUser = async (req, res) => {
     if (req.params && req.params.id) {
         await User.findByIdAndDelete(req.params.id)
@@ -47,9 +52,57 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const registerUser = async (req, res) => {
+    try {
+        const {username, password } = req.body;
+
+        // check if user exists
+        if (await User.findOne({username})) {
+            return res.status(400).send({error: 'User already exists'});
+        }
+
+        // hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // create user
+        const user = new User({username, password: hashedPassword});
+
+        //save user to mongo
+        await user.save();
+        
+        // return user
+        res.status(200).send({data: user});
+    } catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
+const loginUser = async (req, res) => {
+    try {
+        const {username, password} = req.body;
+
+        // check if user exists
+        const user = await User.findOne({username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        // check if password is correct
+        if (await bcrypt.compare(password, user.password)) {
+            res.status(200).send({data: user});
+        } else {
+            res.status(400).send({error: 'Invalid password'});
+        }
+    } catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
     getUsers,
-    deleteUser
+    deleteUser,
+    registerUser,
+    loginUser
 }

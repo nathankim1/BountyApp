@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
-const { createUser, getUser, getUsers, deleteUser } = require('../controllers/user.controller');
+const { createUser, getUser, getUsers, deleteUser, registerUser, loginUser } = 
+require('../controllers/user.controller');
 
 // get users
 router.get('/', getUsers);
@@ -14,5 +15,11 @@ router.post('/', createUser);
 
 // delete user
 router.delete('/:id', deleteUser);
+
+// register a new user with hased password
+router.post('/register', registerUser);
+
+// login user
+router.post('/login', loginUser);
 
 module.exports = router;
