@@ -30,9 +30,13 @@ const UserTransactionSchema = new mongoose.Schema({
         amount: {
             type: Number,
             required: false
+        },
+        paidAmount: {
+            type: Number,
+            required: false
         }
     }]
-}, { _id: false });
+});
 
 const UserSchema = mongoose.Schema({
     username: {

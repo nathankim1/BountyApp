@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
 const { createUser, getUser, getUsers, deleteUser, registerUser, loginUser, 
-    newTransactionUser } = require('../controllers/user.controller');
+    newUserTransaction, getUserTransactions, updateUserTransactions } = require('../controllers/user.controller');
 
 // get users
 router.get('/', getUsers);
@@ -23,6 +23,12 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 // creates a new transaction for a user
-router.post('/transaction', newTransactionUser);
+router.post('/transaction', newUserTransaction);
+
+// gets user transactions
+router.get('/transaction/:username', getUserTransactions);
+
+// updates user transactions
+router.put('/transaction', updateUserTransactions);
 
 module.exports = router;

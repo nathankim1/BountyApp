@@ -98,7 +98,7 @@ const loginUser = async (req, res) => {
     }
 }
 
-const newTransactionUser = async (req, res) => {
+const newUserTransaction = async (req, res) => {
     try {
         const {username, transactionData} = req.body;
 
@@ -121,6 +121,47 @@ const newTransactionUser = async (req, res) => {
     }
 }
 
+const getUserTransactions = async (req, res) => {
+    try {
+        // check if user exists
+        const user = await User.findOne({username: req.params.username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        res.status(200).send({data: user.currentTransactions});
+    }
+    catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
+const updateUserTransactions = async (req, res) => {
+    try {
+        const {username, transactionData} = req.body;
+
+        // check if user exists
+        const user = await User.findOne({username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        // find transaction in currentTransactions array
+        const transaction = user.currentTransactions.id(transactionData._id);
+        if (!transaction) {
+            return res.status(400).send({error: 'Transaction does not exist'});
+        }
+
+        // update transaction
+        transaction.set(transactionData);
+        await user.save();
+
+        res.status(200).send({message: 'Transaction updated', user});
+    } catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
@@ -128,5 +169,7 @@ module.exports = {
     deleteUser,
     registerUser,
     loginUser,
-    newTransactionUser
+    newUserTransaction,
+    getUserTransactions,
+    updateUserTransactions
 }
