@@ -162,6 +162,82 @@ const updateUserTransactions = async (req, res) => {
     }
 }
 
+const moveUserTransaction = async (req, res) => {
+    try {
+        const {username, transactionId} = req.body;
+
+        // check if user exists
+        const user = await User.findOne({username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        // find transaction in currentTransactions array
+        const transaction = user.currentTransactions.id(transactionId);
+        if (!transaction) {
+            return res.status(400).send({error: 'Transaction does not exist'});
+        }
+
+        // move transaction to historyTransactions array
+        user.historyTransactions.push(transaction);
+        user.currentTransactions.pull(transaction);
+        await user.save();
+
+        res.status(200).send({message: 'Transaction moved to history', user});
+    } catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
+const deleteUserTransaction = async (req, res) => {
+    try {
+        // check if user exists
+        const user = await User.findOne({username: req.params.username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        // find the transaction to delete
+        const transactionIndex = user.currentTransactions.findIndex(transaction => transaction._id.toString() === req.params.id);
+        if (transactionIndex === -1) {
+            return res.status(400).send({error: 'Transaction does not exist'});
+        }
+
+        // remove the transaction
+        user.currentTransactions.splice(transactionIndex, 1);
+        await user.save();
+
+        res.status(200).send({data: user.currentTransactions});
+    }
+    catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
+const deleteHistoryTransaction = async (req, res) => {
+    try {
+        // check if user exists
+        const user = await User.findOne({username: req.params.username});
+        if (!user) {
+            return res.status(400).send({error: 'User does not exist'});
+        }
+
+        // find the transaction to delete
+        const transactionIndex = user.historyTransactions.findIndex(transaction => transaction._id.toString() === req.params.id);
+        if (transactionIndex === -1) {
+            return res.status(400).send({error: 'Transaction does not exist'});
+        }
+
+        // remove the transaction
+        user.historyTransactions.splice(transactionIndex, 1);
+        await user.save();
+
+        res.status(200).send({data: user.currentTransactions});
+    } catch (error) {
+        res.status(500).send({error: error.message});
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
@@ -171,5 +247,8 @@ module.exports = {
     loginUser,
     newUserTransaction,
     getUserTransactions,
-    updateUserTransactions
+    updateUserTransactions,
+    moveUserTransaction,
+    deleteUserTransaction,
+    deleteHistoryTransaction
 }

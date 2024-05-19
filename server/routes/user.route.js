@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
 const { createUser, getUser, getUsers, deleteUser, registerUser, loginUser, 
-    newUserTransaction, getUserTransactions, updateUserTransactions } = require('../controllers/user.controller');
+    newUserTransaction, getUserTransactions, updateUserTransactions,
+    moveUserTransaction, deleteUserTransaction, deleteHistoryTransaction } = require('../controllers/user.controller');
 
 // get users
 router.get('/', getUsers);
@@ -30,5 +31,14 @@ router.get('/transaction/:username', getUserTransactions);
 
 // updates user transactions
 router.put('/transaction', updateUserTransactions);
+
+// moves user transaction to history transactions
+router.put('/transaction/move', moveUserTransaction);
+
+// deletes user transaction
+router.delete('/transaction/:username/:id', deleteUserTransaction);
+
+//deletes history transaction
+router.delete('/transaction/history/:username/:id', deleteHistoryTransaction);
 
 module.exports = router;

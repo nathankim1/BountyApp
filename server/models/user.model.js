@@ -52,7 +52,7 @@ const UserSchema = mongoose.Schema({
 
     currentTransactions: [UserTransactionSchema],
 
-    pastTransactions: [UserTransactionSchema]
+    historyTransactions: [UserTransactionSchema]
 },
     {
         timestamps: true
