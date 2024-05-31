@@ -3,6 +3,10 @@ const app = express();
 const mongoose = require("mongoose");
 const transactionRoutes = require("./routes/transaction.route");
 const userRoutes = require("./routes/user.route");
+const cors = require("cors");
+
+// enable all CORS request
+app.use(cors());
 
 // middleware
 app.use(express.json());
