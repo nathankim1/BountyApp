@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = (props: { setLoggedIn: any; setUsername: any }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = (props: {
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const [username, setLoginUsername] = useState("");
+  const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -45,6 +48,8 @@ const Login = (props: { setLoggedIn: any; setUsername: any }) => {
       })
       .then((data) => {
         console.log(data);
+        props.setLoggedIn(true);
+        props.setUsername(username);
         navigate("/");
       })
       .catch((error) => {
@@ -63,7 +68,7 @@ const Login = (props: { setLoggedIn: any; setUsername: any }) => {
         <input
           value={username}
           placeholder="Enter your username here"
-          onChange={(ev) => setUsername(ev.target.value)}
+          onChange={(ev) => setLoginUsername(ev.target.value)}
           className={"inputBox"}
         />
         <label className="errorLabel">{usernameError}</label>
@@ -73,7 +78,7 @@ const Login = (props: { setLoggedIn: any; setUsername: any }) => {
         <input
           value={password}
           placeholder="Enter your password here"
-          onChange={(ev) => setPassword(ev.target.value)}
+          onChange={(ev) => setLoginPassword(ev.target.value)}
           className={"inputBox"}
         />
         <label className="errorLabel">{passwordError}</label>

@@ -9,6 +9,9 @@ const Home = (props: { loggedIn: boolean; username: String }) => {
     console.log("button clicked!");
   };
 
+  console.log(username);
+  if (!username) navigate("/login");
+
   return (
     <div className="mainContainer">
       <div className="titleContainer">
