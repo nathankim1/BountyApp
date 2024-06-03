@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props: {
@@ -58,6 +58,23 @@ const Login = (props: {
       });
   };
 
+  const onButtonClickRef = useRef(onButtonClick);
+  onButtonClickRef.current = onButtonClick;
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.code === "Enter" || event.code === "NumpadEnter") {
+        console.log("Enter key was pressed. Run your function.");
+        event.preventDefault();
+        onButtonClickRef.current();
+      }
+    };
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  }, []);
+
   return (
     <div className={"mainContainer"}>
       <div className={"titleContainer"}>
@@ -77,6 +94,7 @@ const Login = (props: {
       <div className={"inputContainer"}>
         <input
           value={password}
+          type="password"
           placeholder="Enter your password here"
           onChange={(ev) => setLoginPassword(ev.target.value)}
           className={"inputBox"}

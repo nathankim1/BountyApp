@@ -136,7 +136,7 @@ const getUserTransactions = async (req, res) => {
       return res.status(400).send({ error: "User does not exist" });
     }
 
-    res.status(200).send({ data: user.currentTransactions });
+    res.status(200).send({ data: user });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
