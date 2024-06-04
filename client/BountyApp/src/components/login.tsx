@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import BountyNavbar from "./navbar";
 
 const Login = (props: {
+  loggedIn: boolean;
+  username: String;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -76,41 +79,59 @@ const Login = (props: {
   }, []);
 
   return (
-    <div className={"mainContainer"}>
-      <div className={"titleContainer"}>
-        <div>Login</div>
+    <>
+      <BountyNavbar
+        username={props.username}
+        loggedIn={props.loggedIn}
+        setLoggedIn={props.setLoggedIn}
+        setUsername={props.setUsername}
+      />
+      <div className="columnContainer">
+        <div className="column">
+          <div className={"mainContainer"}>
+            <div className={"titleContainer"}>
+              <div>Sign In</div>
+            </div>
+            <br />
+            <div className={"inputContainer"}>
+              <input
+                value={username}
+                placeholder="Enter Username"
+                onChange={(ev) => setLoginUsername(ev.target.value)}
+                className={"inputBox"}
+              />
+              <label className="errorLabel">{usernameError}</label>
+            </div>
+            <br />
+            <div className={"inputContainer"}>
+              <input
+                value={password}
+                type="password"
+                placeholder="Enter Password"
+                onChange={(ev) => setLoginPassword(ev.target.value)}
+                className={"inputBox"}
+              />
+              <label className="errorLabel">{passwordError}</label>
+            </div>
+            <br />
+            <div className={"inputContainer"}>
+              <input
+                className={"inputButton"}
+                type="button"
+                onClick={onButtonClick}
+                value={"Sign In"}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="column">
+          <div className="mainContainer">
+            <h1>Welcome to the Bounty App!</h1>
+            <p>idk what to put here! :D</p>
+          </div>
+        </div>
       </div>
-      <br />
-      <div className={"inputContainer"}>
-        <input
-          value={username}
-          placeholder="Enter your username here"
-          onChange={(ev) => setLoginUsername(ev.target.value)}
-          className={"inputBox"}
-        />
-        <label className="errorLabel">{usernameError}</label>
-      </div>
-      <br />
-      <div className={"inputContainer"}>
-        <input
-          value={password}
-          type="password"
-          placeholder="Enter your password here"
-          onChange={(ev) => setLoginPassword(ev.target.value)}
-          className={"inputBox"}
-        />
-        <label className="errorLabel">{passwordError}</label>
-      </div>
-      <br />
-      <div className={"inputContainer"}>
-        <input
-          className={"inputButton"}
-          type="button"
-          onClick={onButtonClick}
-          value={"Log in"}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

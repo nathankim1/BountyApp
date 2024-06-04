@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import BountyNavbar from "./navbar";
 
 const Home = (props: {
   loggedIn: boolean;
@@ -42,21 +43,15 @@ const Home = (props: {
   }, []);
 
   return (
-    <div className="mainContainer">
-      <div className="titleContainer">
-        <div>Bounty App</div>
-      </div>
-      <div>This is the home page.</div>
-      <div className="buttonContainer">
-        <input
-          className="inputButton"
-          type="button"
-          onClick={onButtonClick}
-          value={loggedIn ? "Logout" : "Login"}
-        />
-        {loggedIn ? <div>Username: {username}</div> : <div />}
-      </div>
-    </div>
+    <>
+      <BountyNavbar
+        username={props.username}
+        loggedIn={props.loggedIn}
+        setLoggedIn={props.setLoggedIn}
+        setUsername={props.setUsername}
+      />
+      <div>Body!</div>
+    </>
   );
 };
 

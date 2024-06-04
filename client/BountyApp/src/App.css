@@ -1,3 +1,20 @@
+.columnContainer {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.column:first-child {
+  flex: 1;
+  padding: 20px;
+}
+
+.column:last-child {
+  flex: 2;
+  padding: 20px;
+  background-color: #FEFBF6;
+}
+
 .mainContainer {
   flex-direction: column;
   display: flex;
