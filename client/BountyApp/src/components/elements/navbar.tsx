@@ -5,18 +5,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useNavigate } from "react-router-dom";
 
-function BountyNavbar(props: {
-  loggedIn: boolean;
-  username: String;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
-}) {
+function BountyNavbar() {
   const navigate = useNavigate();
 
   const onButtonClick = () => {
     console.log("logout button clicked!");
-    props.setLoggedIn(false);
-    props.setUsername("");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -27,10 +21,12 @@ function BountyNavbar(props: {
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Row>
-            {props.loggedIn && (
+            {localStorage.getItem("username") && (
               <>
                 <Col>
-                  <Navbar.Text>Signed in as: {props.username}</Navbar.Text>
+                  <Navbar.Text>
+                    Signed in as: {localStorage.getItem("username")}
+                  </Navbar.Text>
                 </Col>
                 <Col xs="auto">
                   <Button type="submit" onClick={onButtonClick}>

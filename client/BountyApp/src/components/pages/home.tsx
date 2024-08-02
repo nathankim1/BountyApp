@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import BountyNavbar from "./navbar";
+import BountyNavbar from "../elements/navbar";
 
 const Home = (props: {
   loggedIn: boolean;
@@ -8,22 +8,17 @@ const Home = (props: {
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const { loggedIn, username } = props;
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
 
-  const onButtonClick = () => {
-    console.log("logout button clicked!");
-    props.setLoggedIn(false);
-    props.setUsername("");
-    navigate("/login");
-  };
-
   useEffect(() => {
-    console.log(username);
-    if (!username) navigate("/login");
+    const username = localStorage.getItem("username");
+    if (username === null) {
+      navigate("/login");
+      return;
+    }
 
-    fetch("http://localhost:5000/api/user/transaction/michael", {
+    fetch("http://localhost:5000/api/user/transaction/" + username, {
       method: "GET",
     })
       .then((response) => {
@@ -44,12 +39,7 @@ const Home = (props: {
 
   return (
     <>
-      <BountyNavbar
-        username={props.username}
-        loggedIn={props.loggedIn}
-        setLoggedIn={props.setLoggedIn}
-        setUsername={props.setUsername}
-      />
+      <BountyNavbar />
       <div>Body!</div>
     </>
   );

@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./components/home";
-import Login from "./components/login";
+import Home from "./components/pages/home";
+import Login from "./components/pages/login";
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);

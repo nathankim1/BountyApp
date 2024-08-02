@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import BountyNavbar from "./navbar";
+import BountyNavbar from "../elements/navbar";
 
 const Login = (props: {
   loggedIn: boolean;
@@ -20,13 +20,13 @@ const Login = (props: {
     setUsernameError("");
     setPasswordError("");
 
-    if ("" === username) {
+    if (username === "") {
       setUsernameError("Please enter a username");
       console.log("Please enter a username");
       return;
     }
 
-    if ("" === password) {
+    if (password === "") {
       setPasswordError("Please enter a password");
       console.log("Please enter a password");
       return;
@@ -49,10 +49,10 @@ const Login = (props: {
         }
         response.json();
       })
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         props.setLoggedIn(true);
         props.setUsername(username);
+        localStorage.setItem("username", username);
         navigate("/");
       })
       .catch((error) => {
@@ -67,7 +67,6 @@ const Login = (props: {
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (event.code === "Enter" || event.code === "NumpadEnter") {
-        console.log("Enter key was pressed. Run your function.");
         event.preventDefault();
         onButtonClickRef.current();
       }
@@ -80,12 +79,7 @@ const Login = (props: {
 
   return (
     <>
-      <BountyNavbar
-        username={props.username}
-        loggedIn={props.loggedIn}
-        setLoggedIn={props.setLoggedIn}
-        setUsername={props.setUsername}
-      />
+      <BountyNavbar />
       <div className="columnContainer">
         <div className="column">
           <div className={"mainContainer"}>
@@ -127,7 +121,6 @@ const Login = (props: {
         <div className="column">
           <div className="mainContainer">
             <h1>Welcome to the Bounty App!</h1>
-            <p>idk what to put here! :D</p>
           </div>
         </div>
       </div>
