@@ -2,26 +2,59 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-function GridExample() {
+interface People {
+  name: string;
+  amount: number;
+  id: string;
+}
+
+interface Transaction {
+  name: string;
+  amount: number;
+  date: string;
+  userOne: boolean;
+  peopleOwed: People[];
+  id: string;
+}
+
+interface Data {
+  currentTransactions: Transaction[];
+  previousTransactions: Transaction[];
+}
+
+interface UserData {
+  data: Data;
+}
+
+interface Payload {
+  payload: UserData;
+}
+
+function Grid(payload: Payload) {
+  if (payload !== undefined && payload !== null) {
+    console.log("FROM GRID: ", payload);
+    console.log("payload data: ", payload.payload.data.currentTransactions);
+  }
+
   return (
-    <Row xs={1} md={2} className="g-4">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <Col key={idx}>
-          <Card>
-            <Card.Img variant="top" src="holder.js/100px160" />
-            <Card.Body>
-              <Card.Title>Card title</Card.Title>
-              <Card.Text>
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
+    <Row xs={2} md={4} className="g-4">
+      {payload.payload.data.currentTransactions.map(
+        (transaction: Transaction) => (
+          <Col key={transaction.id}>
+            <Card>
+              <Card.Body>
+                <Card.Title>{transaction.name}</Card.Title>
+                <Card.Text>Amount: {transaction.amount}</Card.Text>
+              </Card.Body>
+              <Card.Footer className="text-muted">
+                {transaction.date}
+              </Card.Footer>
+            </Card>
+          </Col>
+        )
+      )}
     </Row>
   );
 }
 
-export default GridExample;
+export default Grid;

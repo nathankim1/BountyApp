@@ -2,12 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
 
-const Login = (props: {
-  loggedIn: boolean;
-  username: String;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const Login = () => {
   const [username, setLoginUsername] = useState("");
   const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -50,8 +45,6 @@ const Login = (props: {
         response.json();
       })
       .then(() => {
-        props.setLoggedIn(true);
-        props.setUsername(username);
         localStorage.setItem("username", username);
         navigate("/");
       })

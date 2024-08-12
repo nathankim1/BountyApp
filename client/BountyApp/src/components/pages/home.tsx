@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
+import Grid from "../elements/grid.tsx";
 
-const Home = (props: {
-  loggedIn: boolean;
-  username: String;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const Home = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
 
@@ -40,7 +36,7 @@ const Home = (props: {
   return (
     <>
       <BountyNavbar />
-      <div>Body!</div>
+      {userData !== null ? <Grid payload={userData} /> : <>No bounties found</>}
     </>
   );
 };
