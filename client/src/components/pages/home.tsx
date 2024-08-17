@@ -24,8 +24,7 @@ const Home = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("user data: ");
-        console.log(data);
+        console.log("Data:", data);
         setUserData(data);
       })
       .catch((error) => {

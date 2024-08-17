@@ -7,7 +7,7 @@ import EditForm from "./editForm.tsx";
 interface People {
   name: string;
   amount: number;
-  id: string;
+  _id: string;
 }
 
 interface Transaction {
@@ -16,7 +16,7 @@ interface Transaction {
   date: string;
   userOwes: boolean;
   peopleOwed: People[];
-  id: string;
+  _id: string;
 }
 
 interface Data {
@@ -40,22 +40,18 @@ const formatDate = (dateString: string) => {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: true, // Use 12-hour format
+    hour12: true,
   };
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
 function Grid(payload: Payload) {
-  if (payload !== undefined && payload !== null) {
-    console.log("FROM GRID: ", payload);
-    console.log("payload data: ", payload.payload.data.currentTransactions);
-  }
-
+  console.log("Payload data: ", payload.payload.data);
   return (
-    <Row xs={2} md={4} className="g-4">
+    <Row xs={1} sm={2} md={4} className="g-4">
       {payload.payload.data.currentTransactions.map(
         (transaction: Transaction) => (
-          <Col key={transaction.id}>
+          <Col key={transaction._id}>
             <Card>
               <Card.Body>
                 <Row className="d-flex justify-content-between">
@@ -69,7 +65,7 @@ function Grid(payload: Payload) {
                       date={transaction.date}
                       userOwes={transaction.userOwes}
                       peopleOwed={transaction.peopleOwed}
-                      id={transaction.id}
+                      _id={transaction._id}
                     />
                   </Col>
                 </Row>
@@ -79,8 +75,8 @@ function Grid(payload: Payload) {
               </Card.Body>
               <ListGroup className="list-group-flush">
                 {transaction.peopleOwed.map((person: People) => (
-                  <ListGroup.Item key={person.id}>
-                    {person.name}: ${person.amount}
+                  <ListGroup.Item key={person._id}>
+                    {person.name} - ${person.amount}
                   </ListGroup.Item>
                 ))}
               </ListGroup>

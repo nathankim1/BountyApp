@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
-import { FloatingLabel, Form } from "react-bootstrap";
 
 const Login = () => {
   const [username, setLoginUsername] = useState("");
