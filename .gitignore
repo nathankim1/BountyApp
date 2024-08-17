@@ -9,6 +9,7 @@ lerna-debug.log*
 
 client/BountyApp/node_modules/
 server/node_modules/
+node_modules/
 dist
 dist-ssr
 *.local

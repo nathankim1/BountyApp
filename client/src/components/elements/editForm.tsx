@@ -7,16 +7,17 @@ interface People {
   _id: string;
 }
 
-interface Transaction {
+interface TransactionProps {
   name: string;
   amount: number;
   date: string;
   userOwes: boolean;
   peopleOwed: People[];
   _id: string;
+  fetchData: () => void;
 }
 
-function editForm(transaction: Transaction) {
+function editForm(transaction: TransactionProps) {
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -73,7 +74,7 @@ function editForm(transaction: Transaction) {
           console.log(response);
           throw new Error("Invalid");
         } else {
-          console.log("Transaction updated successfully");
+          transaction.fetchData();
           handleClose();
         }
       })

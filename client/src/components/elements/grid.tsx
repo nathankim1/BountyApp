@@ -28,8 +28,9 @@ interface UserData {
   data: Data;
 }
 
-interface Payload {
+interface GridProps {
   payload: UserData;
+  fetchData: () => void;
 }
 
 const formatDate = (dateString: string) => {
@@ -45,11 +46,11 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-function Grid(payload: Payload) {
-  console.log("Payload data: ", payload.payload.data);
+function Grid(GridProps: GridProps) {
+  console.log("Payload data: ", GridProps.payload.data);
   return (
     <Row xs={1} sm={2} md={4} className="g-4">
-      {payload.payload.data.currentTransactions.map(
+      {GridProps.payload.data.currentTransactions.map(
         (transaction: Transaction) => (
           <Col key={transaction._id}>
             <Card>
@@ -66,6 +67,7 @@ function Grid(payload: Payload) {
                       userOwes={transaction.userOwes}
                       peopleOwed={transaction.peopleOwed}
                       _id={transaction._id}
+                      fetchData={GridProps.fetchData}
                     />
                   </Col>
                 </Row>

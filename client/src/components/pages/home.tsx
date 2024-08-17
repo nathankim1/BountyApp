@@ -7,7 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
+  const fetchData = () => {
     const username = localStorage.getItem("username");
     if (username === null) {
       navigate("/login");
@@ -30,12 +30,20 @@ const Home = () => {
       .catch((error) => {
         console.log("Error:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return (
     <>
       <BountyNavbar />
-      {userData !== null ? <Grid payload={userData} /> : <>No bounties found</>}
+      {userData !== null ? (
+        <Grid payload={userData} fetchData={fetchData} />
+      ) : (
+        <>No bounties found</>
+      )}
     </>
   );
 };
