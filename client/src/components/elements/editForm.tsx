@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, InputGroup, Modal } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
 
 interface People {
   name: string;
@@ -23,6 +23,7 @@ function editForm(transaction: TransactionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [newName, setNewName] = useState(transaction.name);
   const [newAmount, setNewAmount] = useState(transaction.amount.toString());
+  const [amounts, setAmounts] = useState(transaction.peopleOwed);
 
   const handleShow = () => setShow(true);
 
@@ -48,6 +49,13 @@ function editForm(transaction: TransactionProps) {
       return;
     }
 
+    if (
+      !amounts.every((person) => amountRegex.test(person.amount.toString()))
+    ) {
+      setValidated(false);
+      return;
+    }
+
     setValidated(true);
 
     console.log("trans id: ", transaction._id);
@@ -64,7 +72,7 @@ function editForm(transaction: TransactionProps) {
           date: transaction.date,
           userOwes: transaction.userOwes,
           amount: newAmount,
-          peopleOwed: transaction.peopleOwed,
+          peopleOwed: amounts,
           _id: transaction._id,
         },
       }),
@@ -94,7 +102,7 @@ function editForm(transaction: TransactionProps) {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Label>New Bounty Name</Form.Label>
+            <Form.Label>Bounty Name</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
                 placeholder={transaction.name}
@@ -103,7 +111,7 @@ function editForm(transaction: TransactionProps) {
                 onChange={(e) => setNewName(e.target.value)}
               />
             </InputGroup>
-            <Form.Label>New Total Amount</Form.Label>
+            <Form.Label>Total Amount</Form.Label>
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
               <Form.Control
@@ -113,9 +121,37 @@ function editForm(transaction: TransactionProps) {
                 isInvalid={submitted && !validated}
               />
               <Form.Control.Feedback type="invalid">
-                Please enter a valid dollar amount.
+                One of the dollar amounts is not valid.
               </Form.Control.Feedback>
             </InputGroup>
+            {transaction.peopleOwed.map((person: People) => (
+              <Row key={person._id}>
+                <Form.Label>Amount for {person.name}</Form.Label>
+                <InputGroup className="mb-3">
+                  <InputGroup.Text>$</InputGroup.Text>
+                  <Form.Control
+                    aria-label="Dollar amount (with dot and two decimal places)"
+                    placeholder={person.amount.toString()}
+                    onChange={(e) => {
+                      const newAmounts = amounts.map((amount) => {
+                        if (amount._id === person._id) {
+                          return {
+                            ...amount,
+                            amount: parseFloat(e.target.value),
+                          };
+                        }
+                        return amount;
+                      });
+                      setAmounts(newAmounts);
+                    }}
+                    isInvalid={submitted && !validated}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    One of the dollar amounts is not valid.
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Row>
+            ))}
           </Form>
         </Modal.Body>
         <Modal.Footer>
