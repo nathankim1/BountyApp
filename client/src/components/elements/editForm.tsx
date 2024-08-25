@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 
 interface People {
   name: string;
@@ -24,13 +24,19 @@ function editForm(transaction: TransactionProps) {
   const [newName, setNewName] = useState(transaction.name);
   const [newAmount, setNewAmount] = useState(transaction.amount.toString());
   const [amounts, setAmounts] = useState(transaction.peopleOwed);
+  const [ShowAddPerson, setShowAddPerson] = useState(false);
+  const [showRemovePerson, setShowRemovePerson] = useState(false);
 
   const handleShow = () => setShow(true);
+
+  const showAddPerson = () => setShowAddPerson(true);
 
   const handleClose = () => {
     setShow(false);
     setValidated(false);
     setSubmitted(false);
+    setShowAddPerson(false);
+    setShowRemovePerson(false);
   };
 
   const handleSubmit = async (event: any) => {
@@ -152,6 +158,46 @@ function editForm(transaction: TransactionProps) {
                 </InputGroup>
               </Row>
             ))}
+            <InputGroup className="mb-3">
+              <Button
+                variant="outline-success"
+                size="sm"
+                onClick={showAddPerson}
+              >
+                Add Person
+              </Button>
+            </InputGroup>
+            {ShowAddPerson && (
+              <>
+                <Form.Label>New Name</Form.Label>
+                <InputGroup className="mb-3">
+                  <Form.Control
+                    placeholder="Temp Name"
+                    aria-label="New Person"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setNewName(e.target.value)}
+                  />
+                </InputGroup>
+                <Form.Label>New Amount</Form.Label>
+                <InputGroup className="mb-3">
+                  <InputGroup.Text>$</InputGroup.Text>
+                  <Form.Control
+                    aria-label="Dollar amount (with dot and two decimal places)"
+                    placeholder={transaction.amount.toString()}
+                    onChange={(e) => console.log("awdasdadsasdads")}
+                    isInvalid={submitted && !validated}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    One of the dollar amounts is not valid.
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </>
+            )}
+            <InputGroup className="mb-3">
+              <Button variant="outline-danger" size="sm">
+                Remove Person
+              </Button>
+            </InputGroup>
           </Form>
         </Modal.Body>
         <Modal.Footer>
