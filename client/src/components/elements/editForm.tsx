@@ -4,7 +4,7 @@ import { Button, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 interface People {
   name: string;
   amount: number;
-  _id: string;
+  _id?: string;
 }
 
 interface TransactionProps {
@@ -17,6 +17,12 @@ interface TransactionProps {
   fetchData: () => void;
 }
 
+interface InputSet {
+  id: number;
+  name: string;
+  amount: string;
+}
+
 function editForm(transaction: TransactionProps) {
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -24,24 +30,49 @@ function editForm(transaction: TransactionProps) {
   const [newName, setNewName] = useState(transaction.name);
   const [newAmount, setNewAmount] = useState(transaction.amount.toString());
   const [amounts, setAmounts] = useState(transaction.peopleOwed);
-  const [ShowAddPerson, setShowAddPerson] = useState(false);
-  const [showRemovePerson, setShowRemovePerson] = useState(false);
+  const [inputSet, setInputSet] = useState<InputSet[]>([]);
 
   const handleShow = () => setShow(true);
-
-  const showAddPerson = () => setShowAddPerson(true);
 
   const handleClose = () => {
     setShow(false);
     setValidated(false);
     setSubmitted(false);
-    setShowAddPerson(false);
-    setShowRemovePerson(false);
+  };
+
+  const addInputSet = () => {
+    const newSet: InputSet = {
+      id: inputSet.length,
+      name: "",
+      amount: "",
+    };
+    setInputSet([...inputSet, newSet]);
+  };
+
+  const removeLastInputSet = () => {
+    if (inputSet.length > 0) {
+      setInputSet(inputSet.slice(0, -1));
+    }
+  };
+
+  const handleInputChange = (
+    id: number,
+    field: "name" | "amount",
+    value: string
+  ) => {
+    const updatedSets = inputSet.map((inputSet) => {
+      if (inputSet.id === id) {
+        return { ...inputSet, [field]: value };
+      }
+      return inputSet;
+    });
+    setInputSet(updatedSets);
   };
 
   const handleSubmit = async (event: any) => {
     setSubmitted(true);
 
+    // Validations
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -62,7 +93,24 @@ function editForm(transaction: TransactionProps) {
       return;
     }
 
+    if (!inputSet.every((inputSet) => amountRegex.test(inputSet.amount))) {
+      setValidated(false);
+      return;
+    }
+
     setValidated(true);
+    // End of Validations
+
+    const newAmounts = inputSet.map((set) => ({
+      name: set.name,
+      amount: Number(set.amount),
+    }));
+    console.log("newAmounts: ", newAmounts);
+    const combined = [...amounts, ...newAmounts];
+    console.log("combined: ", combined);
+    setAmounts([...amounts, ...newAmounts]);
+
+    console.log("amounts: ", amounts);
 
     console.log("trans id: ", transaction._id);
     console.log("transaction: ", transaction);
@@ -162,20 +210,31 @@ function editForm(transaction: TransactionProps) {
               <Button
                 variant="outline-success"
                 size="sm"
-                onClick={showAddPerson}
+                onClick={addInputSet}
+                style={{ marginRight: "10px" }}
               >
                 Add Person
               </Button>
+              <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={removeLastInputSet}
+                disabled={inputSet.length === 0}
+              >
+                Remove Last Person
+              </Button>
             </InputGroup>
-            {ShowAddPerson && (
-              <>
+            {inputSet.map((inputSet) => (
+              <div key={inputSet.id}>
                 <Form.Label>New Name</Form.Label>
                 <InputGroup className="mb-3">
                   <Form.Control
                     placeholder="Temp Name"
                     aria-label="New Person"
                     aria-describedby="basic-addon1"
-                    onChange={(e) => setNewName(e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(inputSet.id, "name", e.target.value)
+                    }
                   />
                 </InputGroup>
                 <Form.Label>New Amount</Form.Label>
@@ -184,17 +243,19 @@ function editForm(transaction: TransactionProps) {
                   <Form.Control
                     aria-label="Dollar amount (with dot and two decimal places)"
                     placeholder={transaction.amount.toString()}
-                    onChange={(e) => console.log("awdasdadsasdads")}
+                    onChange={(e) =>
+                      handleInputChange(inputSet.id, "amount", e.target.value)
+                    }
                     isInvalid={submitted && !validated}
                   />
                   <Form.Control.Feedback type="invalid">
                     One of the dollar amounts is not valid.
                   </Form.Control.Feedback>
                 </InputGroup>
-              </>
-            )}
+              </div>
+            ))}
             <InputGroup className="mb-3">
-              <Button variant="outline-danger" size="sm">
+              <Button variant="danger" size="sm">
                 Remove Person
               </Button>
             </InputGroup>
