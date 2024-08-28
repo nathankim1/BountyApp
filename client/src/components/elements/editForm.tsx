@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
 
 interface People {
   name: string;
@@ -29,8 +29,42 @@ function editForm(transaction: TransactionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [newName, setNewName] = useState(transaction.name);
   const [newAmount, setNewAmount] = useState(transaction.amount.toString());
-  const [amounts, setAmounts] = useState(transaction.peopleOwed);
+  const [newPeopleOwed, setNewPeopleOwed] = useState(transaction.peopleOwed);
   const [inputSet, setInputSet] = useState<InputSet[]>([]);
+
+  useEffect(() => {
+    if (submitted && validated) {
+      fetch("http://localhost:5000/api/user/transaction", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: localStorage.getItem("username"),
+          transactionData: {
+            name: newName,
+            date: transaction.date,
+            userOwes: transaction.userOwes,
+            amount: newAmount,
+            peopleOwed: newPeopleOwed,
+            _id: transaction._id,
+          },
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            console.log(response);
+            throw new Error("Invalid");
+          } else {
+            transaction.fetchData();
+            handleClose();
+          }
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    }
+  }, [newName, newAmount, newPeopleOwed, submitted]);
 
   const handleShow = () => setShow(true);
 
@@ -38,6 +72,7 @@ function editForm(transaction: TransactionProps) {
     setShow(false);
     setValidated(false);
     setSubmitted(false);
+    setInputSet([]);
   };
 
   const addInputSet = () => {
@@ -87,7 +122,9 @@ function editForm(transaction: TransactionProps) {
     }
 
     if (
-      !amounts.every((person) => amountRegex.test(person.amount.toString()))
+      !newPeopleOwed.every((person) =>
+        amountRegex.test(person.amount.toString())
+      )
     ) {
       setValidated(false);
       return;
@@ -105,44 +142,7 @@ function editForm(transaction: TransactionProps) {
       name: set.name,
       amount: Number(set.amount),
     }));
-    console.log("newAmounts: ", newAmounts);
-    const combined = [...amounts, ...newAmounts];
-    console.log("combined: ", combined);
-    setAmounts([...amounts, ...newAmounts]);
-
-    console.log("amounts: ", amounts);
-
-    console.log("trans id: ", transaction._id);
-    console.log("transaction: ", transaction);
-    fetch("http://localhost:5000/api/user/transaction", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: localStorage.getItem("username"),
-        transactionData: {
-          name: newName,
-          date: transaction.date,
-          userOwes: transaction.userOwes,
-          amount: newAmount,
-          peopleOwed: amounts,
-          _id: transaction._id,
-        },
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response);
-          throw new Error("Invalid");
-        } else {
-          transaction.fetchData();
-          handleClose();
-        }
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
+    setNewPeopleOwed([...newPeopleOwed, ...newAmounts]);
   };
 
   return (
@@ -187,7 +187,7 @@ function editForm(transaction: TransactionProps) {
                     aria-label="Dollar amount (with dot and two decimal places)"
                     placeholder={person.amount.toString()}
                     onChange={(e) => {
-                      const newAmounts = amounts.map((amount) => {
+                      const newAmounts = newPeopleOwed.map((amount) => {
                         if (amount._id === person._id) {
                           return {
                             ...amount,
@@ -196,7 +196,7 @@ function editForm(transaction: TransactionProps) {
                         }
                         return amount;
                       });
-                      setAmounts(newAmounts);
+                      setNewPeopleOwed(newAmounts);
                     }}
                     isInvalid={submitted && !validated}
                   />
