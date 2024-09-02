@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownButton,
+  Form,
+  InputGroup,
+  Modal,
+  Row,
+} from "react-bootstrap";
+import "../../../styles.css";
 
 interface People {
   name: string;
@@ -156,7 +165,7 @@ function editForm(transaction: TransactionProps) {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Label>Bounty Name</Form.Label>
+            <Form.Label className="bold-label">Bounty Name</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
                 placeholder={transaction.name}
@@ -165,6 +174,7 @@ function editForm(transaction: TransactionProps) {
                 onChange={(e) => setNewName(e.target.value)}
               />
             </InputGroup>
+            <hr />
             <Form.Label>Total Amount</Form.Label>
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
@@ -178,9 +188,10 @@ function editForm(transaction: TransactionProps) {
                 One of the dollar amounts is not valid.
               </Form.Control.Feedback>
             </InputGroup>
-            {transaction.peopleOwed.map((person: People) => (
+            <hr />
+            {newPeopleOwed.map((person: People) => (
               <Row key={person._id}>
-                <Form.Label>Amount for {person.name}</Form.Label>
+                <Form.Label>{person.name}</Form.Label>
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
@@ -206,6 +217,7 @@ function editForm(transaction: TransactionProps) {
                 </InputGroup>
               </Row>
             ))}
+            <hr />
             <InputGroup className="mb-3">
               <Button
                 variant="outline-success"
@@ -254,10 +266,13 @@ function editForm(transaction: TransactionProps) {
                 </InputGroup>
               </div>
             ))}
+            <hr />
             <InputGroup className="mb-3">
-              <Button variant="danger" size="sm">
-                Remove Person
-              </Button>
+              <Form.Select title="Remove Person">
+                {newPeopleOwed.map((person: People) => (
+                  <option>{person.name}</option>
+                ))}
+              </Form.Select>
             </InputGroup>
           </Form>
         </Modal.Body>
