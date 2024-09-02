@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  Form,
-  InputGroup,
-  Modal,
-  Row,
-} from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import "../../../styles.css";
 
 interface People {
@@ -40,6 +32,7 @@ function editForm(transaction: TransactionProps) {
   const [newAmount, setNewAmount] = useState(transaction.amount.toString());
   const [newPeopleOwed, setNewPeopleOwed] = useState(transaction.peopleOwed);
   const [inputSet, setInputSet] = useState<InputSet[]>([]);
+  const [personToRemove, setPersonToRemove] = useState("");
 
   useEffect(() => {
     if (submitted && validated) {
@@ -113,6 +106,15 @@ function editForm(transaction: TransactionProps) {
     setInputSet(updatedSets);
   };
 
+  const handleKeyDown = (event: any) => {
+    if (event.code === "Enter" || event.code === "NumpadEnter") {
+      event.preventDefault();
+      handleSubmit(event);
+    } else if (event.code === "Escape") {
+      handleClose();
+    }
+  };
+
   const handleSubmit = async (event: any) => {
     setSubmitted(true);
 
@@ -151,7 +153,12 @@ function editForm(transaction: TransactionProps) {
       name: set.name,
       amount: Number(set.amount),
     }));
-    setNewPeopleOwed([...newPeopleOwed, ...newAmounts]);
+
+    const newPeople = [...newPeopleOwed, ...newAmounts].filter(
+      (person) => person.name !== personToRemove
+    );
+
+    setNewPeopleOwed(newPeople);
   };
 
   return (
@@ -164,7 +171,12 @@ function editForm(transaction: TransactionProps) {
           <Modal.Title>Editing {transaction.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={handleSubmit}
+            onKeyDown={handleKeyDown}
+          >
             <Form.Label className="bold-label">Bounty Name</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
@@ -175,7 +187,7 @@ function editForm(transaction: TransactionProps) {
               />
             </InputGroup>
             <hr />
-            <Form.Label>Total Amount</Form.Label>
+            <Form.Label className="bold-label">Total Amount</Form.Label>
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
               <Form.Control
@@ -189,6 +201,7 @@ function editForm(transaction: TransactionProps) {
               </Form.Control.Feedback>
             </InputGroup>
             <hr />
+            <Form.Label className="bold-label">Edit People</Form.Label>
             {newPeopleOwed.map((person: People) => (
               <Row key={person._id}>
                 <Form.Label>{person.name}</Form.Label>
@@ -218,6 +231,7 @@ function editForm(transaction: TransactionProps) {
               </Row>
             ))}
             <hr />
+            <Form.Label className="bold-label">Add People</Form.Label>
             <InputGroup className="mb-3">
               <Button
                 variant="outline-success"
@@ -267,8 +281,13 @@ function editForm(transaction: TransactionProps) {
               </div>
             ))}
             <hr />
+            <Form.Label className="bold-label">Remove Person</Form.Label>
             <InputGroup className="mb-3">
-              <Form.Select title="Remove Person">
+              <Form.Select
+                title="Remove Person"
+                onChange={(e) => setPersonToRemove(e.target.value)}
+              >
+                <option>Choose...</option>
                 {newPeopleOwed.map((person: People) => (
                   <option>{person.name}</option>
                 ))}
@@ -280,7 +299,7 @@ function editForm(transaction: TransactionProps) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
+          <Button type="submit" variant="primary" onClick={handleSubmit}>
             Submit Changes
           </Button>
         </Modal.Footer>
