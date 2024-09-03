@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
 
-const Login = () => {
+const Signup = () => {
   const [username, setLoginUsername] = useState("");
   const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -27,8 +27,7 @@ const Login = () => {
       return;
     }
 
-    // Authentication
-    fetch("http://localhost:5000/api/user/login", {
+    fetch("http://localhost:5000/api/user/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +45,7 @@ const Login = () => {
       })
       .then(() => {
         localStorage.setItem("username", username);
-        navigate("/");
+        navigate("/login");
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -77,7 +76,7 @@ const Login = () => {
         <div className="column">
           <div className={"mainContainer"}>
             <div className={"titleContainer"}>
-              <div>Sign In</div>
+              <div>Sign Up</div>
             </div>
             <br />
             <div className={"inputContainer"}>
@@ -111,19 +110,9 @@ const Login = () => {
             </div>
             <div>
               <p>
-                Don't have an account?{" "}
-                <a href="/signup" style={{ color: "blue" }}>
-                  Sign Up
-                </a>
+                Already have an account? <a href="/login">Login</a>
               </p>
             </div>
-          </div>
-        </div>
-        <div className="column">
-          <div className="mainContainer">
-            <div className="titleContainer">Welcome to the Bounty App!</div>
-            <h3>Track big purchases among your friends</h3>
-            <h3>Create an account to get started!</h3>
           </div>
         </div>
       </div>
@@ -131,4 +120,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
