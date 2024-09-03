@@ -8,12 +8,12 @@ interface People {
   _id?: string;
 }
 
-interface addFormProps {
+interface deleteFormProps {
   peopleOwed: People[];
   fetchData: () => void;
 }
 
-function deleteForm(props: addFormProps) {
+function deleteForm(props: deleteFormProps) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [deleteID, setDeleteID] = useState("");
