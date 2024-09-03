@@ -40,9 +40,11 @@ const Home = () => {
   return (
     <>
       <BountyNavbar />
-      <ButtonNavbar fetchData={fetchData} />
       {userData !== null ? (
-        <Grid payload={userData} fetchData={fetchData} />
+        <>
+          <ButtonNavbar payload={userData} fetchData={fetchData} />
+          <Grid payload={userData} fetchData={fetchData} />
+        </>
       ) : (
         <>No bounties found</>
       )}
