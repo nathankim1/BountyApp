@@ -5,7 +5,7 @@ import Signup from "./components/pages/signup";
 import "./App.css";
 
 function App() {
-  const url = "http://localhost:5000/";
+  const url = "http://localhost:5000/"; // example: props.url + "api/user/login"
   return (
     <div className="App">
       <BrowserRouter>
