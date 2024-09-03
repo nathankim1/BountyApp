@@ -49,7 +49,7 @@ const formatDate = (dateString: string) => {
 function Grid(GridProps: GridProps) {
   console.log("Payload data: ", GridProps.payload.data);
   return (
-    <Row xs={1} sm={2} md={4} className="g-4">
+    <Row xs={1} sm={2} md={4} className="g-3 p-2">
       {GridProps.payload.data.currentTransactions.map(
         (transaction: Transaction) => (
           <Col key={transaction._id}>

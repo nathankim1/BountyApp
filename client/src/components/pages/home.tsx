@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
 import Grid from "../elements/grid.tsx";
+import ButtonNavbar from "../elements/buttonNavbar.tsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Home = () => {
   return (
     <>
       <BountyNavbar />
+      <ButtonNavbar fetchData={fetchData} />
       {userData !== null ? (
         <Grid payload={userData} fetchData={fetchData} />
       ) : (

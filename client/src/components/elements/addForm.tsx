@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Form, InputGroup, Modal, Row } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import "../../../styles.css";
 
 interface People {
@@ -8,13 +8,7 @@ interface People {
   _id?: string;
 }
 
-interface TransactionProps {
-  name: string;
-  amount: number;
-  date: string;
-  userOwes: boolean;
-  peopleOwed: People[];
-  _id: string;
+interface addFormProps {
   fetchData: () => void;
 }
 
@@ -24,20 +18,19 @@ interface InputSet {
   amount: string;
 }
 
-function editForm(transaction: TransactionProps) {
+function addForm(props: addFormProps) {
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [newName, setNewName] = useState(transaction.name);
-  const [newAmount, setNewAmount] = useState(transaction.amount.toString());
-  const [newPeopleOwed, setNewPeopleOwed] = useState(transaction.peopleOwed);
+  const [newName, setNewName] = useState("");
+  const [newDate, setNewDate] = useState("");
+  const [newAmount, setNewAmount] = useState("");
+  const [newPeopleOwed, setNewPeopleOwed] = useState<People[]>([]);
   const [inputSet, setInputSet] = useState<InputSet[]>([]);
-  const [personToRemove, setPersonToRemove] = useState("");
-
   useEffect(() => {
     if (submitted && validated) {
       fetch("http://localhost:5000/api/user/transaction", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -45,11 +38,10 @@ function editForm(transaction: TransactionProps) {
           username: localStorage.getItem("username"),
           transactionData: {
             name: newName,
-            date: transaction.date,
-            userOwes: transaction.userOwes,
+            date: newDate,
             amount: newAmount,
             peopleOwed: newPeopleOwed,
-            _id: transaction._id,
+            userOwes: false,
           },
         }),
       })
@@ -58,7 +50,7 @@ function editForm(transaction: TransactionProps) {
             console.log(response);
             throw new Error("Invalid");
           } else {
-            transaction.fetchData();
+            props.fetchData();
             handleClose();
           }
         })
@@ -132,15 +124,6 @@ function editForm(transaction: TransactionProps) {
       return;
     }
 
-    if (
-      !newPeopleOwed.every((person) =>
-        amountRegex.test(person.amount.toString())
-      )
-    ) {
-      setValidated(false);
-      return;
-    }
-
     if (!inputSet.every((inputSet) => amountRegex.test(inputSet.amount))) {
       setValidated(false);
       return;
@@ -149,26 +132,24 @@ function editForm(transaction: TransactionProps) {
     setValidated(true);
     // End of Validations
 
-    const newAmounts = inputSet.map((set) => ({
+    setNewDate(new Date().toISOString());
+
+    const newPeople = inputSet.map((set) => ({
       name: set.name,
       amount: Number(set.amount),
     }));
-
-    const newPeople = [...newPeopleOwed, ...newAmounts].filter(
-      (person) => person.name !== personToRemove
-    );
 
     setNewPeopleOwed(newPeople);
   };
 
   return (
     <>
-      <Button variant="secondary" size="sm" onClick={handleShow}>
-        Edit
+      <Button variant="outline-success" onClick={handleShow}>
+        Add New Bounty
       </Button>
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Editing {transaction.name}</Modal.Title>
+          <Modal.Title>Creating New Bounty</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form
@@ -180,7 +161,7 @@ function editForm(transaction: TransactionProps) {
             <Form.Label className="bold-label">Bounty Name</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
-                placeholder={transaction.name}
+                placeholder={"Name of Bounty"}
                 aria-label="Transaction Name"
                 aria-describedby="basic-addon1"
                 onChange={(e) => setNewName(e.target.value)}
@@ -192,7 +173,7 @@ function editForm(transaction: TransactionProps) {
               <InputGroup.Text>$</InputGroup.Text>
               <Form.Control
                 aria-label="Dollar amount (with dot and two decimal places)"
-                placeholder={transaction.amount.toString()}
+                placeholder={"0.00"}
                 onChange={(e) => setNewAmount(e.target.value)}
                 isInvalid={submitted && !validated}
               />
@@ -200,36 +181,6 @@ function editForm(transaction: TransactionProps) {
                 One of the dollar amounts is not valid.
               </Form.Control.Feedback>
             </InputGroup>
-            <hr />
-            <Form.Label className="bold-label">Edit People</Form.Label>
-            {newPeopleOwed.map((person: People) => (
-              <Row key={person._id}>
-                <Form.Label>{person.name}</Form.Label>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text>$</InputGroup.Text>
-                  <Form.Control
-                    aria-label="Dollar amount (with dot and two decimal places)"
-                    placeholder={person.amount.toString()}
-                    onChange={(e) => {
-                      const newAmounts = newPeopleOwed.map((amount) => {
-                        if (amount._id === person._id) {
-                          return {
-                            ...amount,
-                            amount: parseFloat(e.target.value),
-                          };
-                        }
-                        return amount;
-                      });
-                      setNewPeopleOwed(newAmounts);
-                    }}
-                    isInvalid={submitted && !validated}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    One of the dollar amounts is not valid.
-                  </Form.Control.Feedback>
-                </InputGroup>
-              </Row>
-            ))}
             <hr />
             <Form.Label className="bold-label">Add People</Form.Label>
             <InputGroup className="mb-3">
@@ -268,7 +219,7 @@ function editForm(transaction: TransactionProps) {
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
                     aria-label="Dollar amount (with dot and two decimal places)"
-                    placeholder={transaction.amount.toString()}
+                    placeholder={"0.00"}
                     onChange={(e) =>
                       handleInputChange(inputSet.id, "amount", e.target.value)
                     }
@@ -280,19 +231,6 @@ function editForm(transaction: TransactionProps) {
                 </InputGroup>
               </div>
             ))}
-            <hr />
-            <Form.Label className="bold-label">Remove Person</Form.Label>
-            <InputGroup className="mb-3">
-              <Form.Select
-                title="Remove Person"
-                onChange={(e) => setPersonToRemove(e.target.value)}
-              >
-                <option>Choose...</option>
-                {newPeopleOwed.map((person: People) => (
-                  <option key={person._id}>{person.name}</option>
-                ))}
-              </Form.Select>
-            </InputGroup>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -300,7 +238,7 @@ function editForm(transaction: TransactionProps) {
             Close
           </Button>
           <Button type="submit" variant="primary" onClick={handleSubmit}>
-            Submit Changes
+            Submit
           </Button>
         </Modal.Footer>
       </Modal>
@@ -308,4 +246,4 @@ function editForm(transaction: TransactionProps) {
   );
 }
 
-export default editForm;
+export default addForm;
