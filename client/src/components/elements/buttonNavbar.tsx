@@ -30,17 +30,19 @@ interface UserData {
 interface buttonNavbarProps {
   payload: UserData;
   fetchData: () => void;
+  url: String;
 }
 
 function buttonNavbar(props: buttonNavbarProps) {
   return (
     <Navbar>
       <Container>
-        <AddForm fetchData={props.fetchData} />
-        <FilterForm peopleOwed={props.payload.data.currentTransactions} />
+        <AddForm fetchData={props.fetchData} url={props.url} />
+        {/* <FilterForm peopleOwed={props.payload.data.currentTransactions} /> */}
         <DeleteForm
           peopleOwed={props.payload.data.currentTransactions}
           fetchData={props.fetchData}
+          url={props.url}
         />
       </Container>
     </Navbar>

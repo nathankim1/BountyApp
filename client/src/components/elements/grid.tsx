@@ -31,6 +31,7 @@ interface UserData {
 interface GridProps {
   payload: UserData;
   fetchData: () => void;
+  url: String;
 }
 
 const formatDate = (dateString: string) => {
@@ -68,6 +69,7 @@ function Grid(GridProps: GridProps) {
                       peopleOwed={transaction.peopleOwed}
                       _id={transaction._id}
                       fetchData={GridProps.fetchData}
+                      url={GridProps.url}
                     />
                   </Col>
                 </Row>

@@ -10,6 +10,7 @@ interface People {
 
 interface addFormProps {
   fetchData: () => void;
+  url: String;
 }
 
 interface InputSet {
@@ -29,7 +30,7 @@ function addForm(props: addFormProps) {
   const [inputSet, setInputSet] = useState<InputSet[]>([]);
   useEffect(() => {
     if (submitted && validated) {
-      fetch("http://localhost:5000/api/user/transaction", {
+      fetch(props.url + "api/user/transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
