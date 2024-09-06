@@ -172,6 +172,8 @@ function addForm(props: addFormProps) {
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
               <Form.Control
+                type="number"
+                inputMode="decimal"
                 aria-label="Dollar amount (with dot and two decimal places)"
                 placeholder={"0.00"}
                 onChange={(e) => setNewAmount(e.target.value)}
@@ -218,6 +220,8 @@ function addForm(props: addFormProps) {
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
+                    type="number"
+                    inputMode="decimal"
                     aria-label="Dollar amount (with dot and two decimal places)"
                     placeholder={"0.00"}
                     onChange={(e) =>

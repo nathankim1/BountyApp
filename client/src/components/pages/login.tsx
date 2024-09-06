@@ -122,7 +122,7 @@ const Login = () => {
         <div className="column">
           <div className="mainContainer">
             <div className="titleContainer">Welcome to the Bounty App!</div>
-            <h3>Track big purchases among your friends</h3>
+            <h3>Track big purchases among your friends.</h3>
             <h3>Create an account to get started!</h3>
           </div>
         </div>

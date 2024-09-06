@@ -191,6 +191,8 @@ function editForm(transaction: TransactionProps) {
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
               <Form.Control
+                type="number"
+                inputMode="decimal"
                 aria-label="Dollar amount (with dot and two decimal places)"
                 placeholder={transaction.amount.toString()}
                 onChange={(e) => setNewAmount(e.target.value)}
@@ -208,6 +210,8 @@ function editForm(transaction: TransactionProps) {
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
+                    type="number"
+                    inputMode="decimal"
                     aria-label="Dollar amount (with dot and two decimal places)"
                     placeholder={person.amount.toString()}
                     onChange={(e) => {
@@ -267,6 +271,8 @@ function editForm(transaction: TransactionProps) {
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
+                    type="number"
+                    inputMode="decimal"
                     aria-label="Dollar amount (with dot and two decimal places)"
                     placeholder={transaction.amount.toString()}
                     onChange={(e) =>
