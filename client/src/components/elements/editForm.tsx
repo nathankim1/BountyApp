@@ -294,7 +294,7 @@ function editForm(transaction: TransactionProps) {
                 title="Remove Person"
                 onChange={(e) => setPersonToRemove(e.target.value)}
               >
-                <option>Choose...</option>
+                <option key={"0"}>Choose...</option>
                 {newPeopleOwed.map((person: People) => (
                   <option key={person._id}>{person.name}</option>
                 ))}

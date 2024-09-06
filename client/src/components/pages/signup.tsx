@@ -21,13 +21,11 @@ const Signup = (props: SignupProps) => {
 
     if (username === "") {
       setUsernameError("Please enter a username");
-      console.log("Please enter a username");
       return;
     }
 
     if (password === "") {
       setPasswordError("Please enter a password");
-      console.log("Please enter a password");
       return;
     }
 

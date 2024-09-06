@@ -31,7 +31,6 @@ function deleteForm(props: filterFormProps) {
   };
 
   const handleSubmit = async () => {
-    console.log("Submitted");
     handleClose();
   };
 

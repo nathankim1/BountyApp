@@ -20,7 +20,6 @@ function deleteForm(props: deleteFormProps) {
   const [deleteID, setDeleteID] = useState("");
   useEffect(() => {
     if (submitted) {
-      console.log("DELETE ID: ", deleteID);
       fetch(
         props.url +
           "api/user/transaction/" +
@@ -72,8 +71,6 @@ function deleteForm(props: deleteFormProps) {
   const handleDeleteID = (name: string) => {
     if (name !== "Choose...") {
       const person = props.peopleOwed.find((person) => person.name === name);
-      console.log("PERSON: ", person);
-      console.log("PERSON ID: ", person?._id);
       setDeleteID(person?._id || "");
     }
   };

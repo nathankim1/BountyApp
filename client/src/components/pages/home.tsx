@@ -29,7 +29,6 @@ const Home = (props: HomeProps) => {
         return response.json();
       })
       .then((data) => {
-        console.log("Data:", data);
         setUserData(data);
       })
       .catch((error) => {

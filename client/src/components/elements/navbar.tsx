@@ -7,7 +7,6 @@ function BountyNavbar() {
   const navigate = useNavigate();
 
   const onButtonClick = () => {
-    console.log("logout button clicked!");
     localStorage.removeItem("username");
     navigate("/login");
   };
