@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 //const transactionRoutes = require("./routes/transaction.route");
 const userRoutes = require("./routes/user.route");
 const cors = require("cors");
+require('dotenv').config();
 
 // enable all CORS request
 app.use(cors());
@@ -20,15 +21,17 @@ app.get("/", (req, res) => {
   res.send("Hello from the server side");
 });
 
+const port = process.env.PORT || 3000;
+
 // mongodb connection + server connection
 mongoose
   .connect(
-    "mongodb+srv://capnik:bounty@cluster0.lls5kze.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    process.env.MONGODB
   )
   .then(() => {
     console.log("Connected to the database");
-    app.listen(5000, () => {
-      console.log("Server is running on port 5000");
+    app.listen(port, () => {
+      console.log("Server is running on port " + port);
     });
   })
   .catch((error) => {
