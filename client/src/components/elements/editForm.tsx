@@ -16,6 +16,7 @@ interface TransactionProps {
   peopleOwed: People[];
   _id: string;
   fetchData: () => void;
+  url: String;
 }
 
 interface InputSet {
@@ -36,7 +37,7 @@ function editForm(transaction: TransactionProps) {
 
   useEffect(() => {
     if (submitted && validated) {
-      fetch("http://localhost:5000/api/user/transaction", {
+      fetch(transaction.url + "api/user/transaction", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

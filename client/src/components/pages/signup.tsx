@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
 
-const Signup = () => {
+interface SignupProps {
+  url: String;
+}
+
+const Signup = (props: SignupProps) => {
   const [username, setLoginUsername] = useState("");
   const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -27,7 +31,7 @@ const Signup = () => {
       return;
     }
 
-    fetch("http://localhost:5000/api/user/register", {
+    fetch(props.url + "api/user/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

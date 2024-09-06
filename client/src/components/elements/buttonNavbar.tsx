@@ -2,7 +2,6 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import AddForm from "./addForm";
 import DeleteForm from "./deleteForm";
-import FilterForm from "./filterForm";
 
 interface People {
   name: string;
@@ -30,17 +29,18 @@ interface UserData {
 interface buttonNavbarProps {
   payload: UserData;
   fetchData: () => void;
+  url: String;
 }
 
 function buttonNavbar(props: buttonNavbarProps) {
   return (
     <Navbar>
       <Container>
-        <AddForm fetchData={props.fetchData} />
-        <FilterForm peopleOwed={props.payload.data.currentTransactions} />
+        <AddForm fetchData={props.fetchData} url={props.url} />
         <DeleteForm
           peopleOwed={props.payload.data.currentTransactions}
           fetchData={props.fetchData}
+          url={props.url}
         />
       </Container>
     </Navbar>

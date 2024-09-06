@@ -4,7 +4,11 @@ import BountyNavbar from "../elements/navbar";
 import Grid from "../elements/grid.tsx";
 import ButtonNavbar from "../elements/buttonNavbar.tsx";
 
-const Home = () => {
+interface HomeProps {
+  url: String;
+}
+
+const Home = (props: HomeProps) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
 
@@ -15,7 +19,7 @@ const Home = () => {
       return;
     }
 
-    fetch("http://localhost:5000/api/user/transaction/" + username, {
+    fetch(props.url + "api/user/transaction/" + username, {
       method: "GET",
     })
       .then((response) => {
@@ -42,8 +46,12 @@ const Home = () => {
       <BountyNavbar />
       {userData !== null ? (
         <>
-          <ButtonNavbar payload={userData} fetchData={fetchData} />
-          <Grid payload={userData} fetchData={fetchData} />
+          <ButtonNavbar
+            payload={userData}
+            fetchData={fetchData}
+            url={props.url}
+          />
+          <Grid payload={userData} fetchData={fetchData} url={props.url} />
         </>
       ) : (
         <>No bounties found</>

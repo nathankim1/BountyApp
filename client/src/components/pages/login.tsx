@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BountyNavbar from "../elements/navbar";
 
-const Login = () => {
+interface LoginProps {
+  url: String;
+}
+
+const Login = (props: LoginProps) => {
   const [username, setLoginUsername] = useState("");
   const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -28,7 +32,7 @@ const Login = () => {
     }
 
     // Authentication
-    fetch("http://localhost:5000/api/user/login", {
+    fetch(props.url + "api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -11,6 +11,7 @@ interface People {
 interface deleteFormProps {
   peopleOwed: People[];
   fetchData: () => void;
+  url: String;
 }
 
 function deleteForm(props: deleteFormProps) {
@@ -21,7 +22,8 @@ function deleteForm(props: deleteFormProps) {
     if (submitted) {
       console.log("DELETE ID: ", deleteID);
       fetch(
-        "http://localhost:5000/api/user/transaction/" +
+        props.url +
+          "api/user/transaction/" +
           localStorage.getItem("username") +
           "/" +
           deleteID,

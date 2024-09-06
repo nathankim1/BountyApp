@@ -32,5 +32,5 @@ mongoose
     });
   })
   .catch((error) => {
-    console.log("Connection to databse failed", error);
+    console.log("Connection to database failed", error);
   });
