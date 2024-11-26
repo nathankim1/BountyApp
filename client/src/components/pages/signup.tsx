@@ -11,6 +11,7 @@ const Signup = (props: SignupProps) => {
   const [password, setLoginPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ const Signup = (props: SignupProps) => {
       })
       .catch((error) => {
         console.log("Error:", error);
-        window.alert("Invalid username or password");
+        setMessage("Invalid username or password");
       });
   };
 
@@ -106,7 +107,7 @@ const Signup = (props: SignupProps) => {
                 className={"inputButton"}
                 type="button"
                 onClick={onButtonClick}
-                value={"Sign In"}
+                value={"Sign Up"}
               />
             </div>
             <div>
@@ -114,6 +115,7 @@ const Signup = (props: SignupProps) => {
                 Already have an account? <a href="/login">Login</a>
               </p>
             </div>
+            <label className="errorLabel">{message}</label>
           </div>
         </div>
       </div>

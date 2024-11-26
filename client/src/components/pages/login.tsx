@@ -9,6 +9,7 @@ interface LoginProps {
 const Login = (props: LoginProps) => {
   const [username, setLoginUsername] = useState("");
   const [password, setLoginPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -52,7 +53,7 @@ const Login = (props: LoginProps) => {
       })
       .catch((error) => {
         console.log("Error:", error);
-        window.alert("Invalid username or password");
+        setMessage("Invalid username or password");
       });
   };
 
@@ -119,6 +120,7 @@ const Login = (props: LoginProps) => {
                 </a>
               </p>
             </div>
+            <label className="errorLabel">{message}</label>
           </div>
         </div>
         <div className="column">
