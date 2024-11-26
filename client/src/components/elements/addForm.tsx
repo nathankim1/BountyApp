@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import "../../../styles.css";
+import AlertModal from "./alertModal";
 
 interface People {
   name: string;
@@ -28,6 +29,7 @@ function addForm(props: addFormProps) {
   const [newAmount, setNewAmount] = useState("");
   const [newPeopleOwed, setNewPeopleOwed] = useState<People[]>([]);
   const [inputSet, setInputSet] = useState<InputSet[]>([]);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (submitted && validated) {
       fetch(props.url + "api/user/transaction", {
@@ -53,6 +55,7 @@ function addForm(props: addFormProps) {
           } else {
             props.fetchData();
             handleClose();
+            setSuccess(true);
           }
         })
         .catch((error) => {
@@ -247,6 +250,12 @@ function addForm(props: addFormProps) {
           </Button>
         </Modal.Footer>
       </Modal>
+      {success && (
+        <AlertModal
+          message={"Successfully Added " + newName}
+          setSuccess={setSuccess}
+        />
+      )}
     </>
   );
 }

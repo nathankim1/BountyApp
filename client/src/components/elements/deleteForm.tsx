@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import "../../../styles.css";
+import AlertModal from "./alertModal";
 
 interface People {
   name: string;
@@ -18,6 +19,8 @@ function deleteForm(props: deleteFormProps) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [deleteID, setDeleteID] = useState("");
+  const [name, setName] = useState("");
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (submitted) {
       fetch(
@@ -40,6 +43,7 @@ function deleteForm(props: deleteFormProps) {
           } else {
             props.fetchData();
             handleClose();
+            setSuccess(true);
           }
         })
         .catch((error) => {
@@ -71,6 +75,7 @@ function deleteForm(props: deleteFormProps) {
   const handleDeleteID = (name: string) => {
     if (name !== "Choose...") {
       const person = props.peopleOwed.find((person) => person.name === name);
+      setName(name);
       setDeleteID(person?._id || "");
     }
   };
@@ -108,6 +113,12 @@ function deleteForm(props: deleteFormProps) {
           </Button>
         </Modal.Footer>
       </Modal>
+      {success && (
+        <AlertModal
+          message={"Successfully Deleted " + name}
+          setSuccess={setSuccess}
+        />
+      )}
     </>
   );
 }
