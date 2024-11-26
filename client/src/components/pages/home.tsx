@@ -39,6 +39,7 @@ const Home = (props: HomeProps) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [bountyIsEmpty, setBountyIsEmpty] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true);
 
   const fetchData = () => {
     const username = localStorage.getItem("username");
@@ -63,6 +64,7 @@ const Home = (props: HomeProps) => {
           setBountyIsEmpty(true);
         } else {
           setBountyIsEmpty(false);
+          setShowTutorial(false);
         }
       })
       .catch((error) => {
@@ -74,6 +76,10 @@ const Home = (props: HomeProps) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleTutorialClose = () => {
+    setShowTutorial(false);
+  };
 
   return (
     <>
@@ -93,7 +99,9 @@ const Home = (props: HomeProps) => {
             <Grid payload={userData} fetchData={fetchData} url={props.url} />
           ) : (
             <>
-              <TutorialForm />
+              {showTutorial && (
+                <TutorialForm handleClose={handleTutorialClose} />
+              )}
               <div className="loading-container">
                 <h2>No Bounties Found</h2>
               </div>

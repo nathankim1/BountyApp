@@ -5,6 +5,7 @@ import AlertModal from "./alertModal";
 
 interface People {
   name: string;
+  date: string;
   amount: number;
   _id?: string;
 }
@@ -21,6 +22,7 @@ function deleteForm(props: deleteFormProps) {
   const [deleteID, setDeleteID] = useState("");
   const [name, setName] = useState("");
   const [success, setSuccess] = useState(false);
+
   useEffect(() => {
     if (submitted) {
       fetch(
@@ -80,6 +82,15 @@ function deleteForm(props: deleteFormProps) {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <>
       <Button variant="outline-danger" onClick={handleShow}>
@@ -98,7 +109,9 @@ function deleteForm(props: deleteFormProps) {
               >
                 <option>Choose...</option>
                 {props.peopleOwed.map((person: People) => (
-                  <option key={person._id}>{person.name}</option>
+                  <option key={person._id} value={person.name}>
+                    {person.name + ": " + formatDate(person.date)}
+                  </option>
                 ))}
               </Form.Select>
             </InputGroup>

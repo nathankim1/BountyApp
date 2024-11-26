@@ -2,10 +2,17 @@ import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import "../../../styles.css";
 
-function tutorialForm() {
+interface TutorialFormProps {
+  handleClose: () => void;
+}
+
+function tutorialForm(TutorialFormProps: TutorialFormProps) {
   const [show, setShow] = useState(true);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    TutorialFormProps.handleClose();
+  };
 
   const handleKeyDown = (event: any) => {
     if (event.code === "Escape") {
