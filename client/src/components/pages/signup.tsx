@@ -46,7 +46,6 @@ const Signup = (props: SignupProps) => {
         response.json();
       })
       .then(() => {
-        localStorage.setItem("username", username);
         navigate("/login");
       })
       .catch((error) => {
